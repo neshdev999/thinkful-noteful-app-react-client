@@ -121,7 +121,7 @@ class App extends Component {
   renderSidebar() {
     return (
       <>
-      <h2>Folders</h2>
+        <h2>Folders</h2>
         {['/', '/folder/:folderId'].map(path => (
           <Route
             exact

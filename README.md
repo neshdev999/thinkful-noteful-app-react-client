@@ -3,11 +3,11 @@
 Note-taking application, the user can add/delete notes and organize them in folders.
 
 ## Working Prototype
-[Noteful API Repo](https://github.com/brandiherrera/noteful-app-server)
+[Noteful API Repo](https://github.com/neshdev999/noteful-server)
 
-[Noteful React Repo](https://github.com/brandiherrera/noteful-app)
+[Noteful React Repo](https://github.com/neshdev999/thinkful-noteful-app-react-client)
 
-[Live Noteful Application](https://noteful-app.brandiherrera.now.sh/)
+[Live Noteful Application](https://noteful-app-psi-sage.vercel.app)
 
 ## Live Screenshots
 
