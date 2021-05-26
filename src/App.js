@@ -100,7 +100,7 @@ class App extends Component {
   renderMain() {
     return (
       <>
-      <h2>Notes</h2>
+        <h2>Notes</h2>
         {['/', '/folder/:folderId'].map(path => (
           <Route
             exact

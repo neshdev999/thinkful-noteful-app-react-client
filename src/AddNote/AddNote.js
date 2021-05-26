@@ -18,51 +18,163 @@ export default class AddNote extends Component {
                 'You must select a folder',
             name: 'You must enter a note title',
             content: 'You must enter a description'
-        }
+        },
+        noteNameIndicator: false,
+        noteContentIndicator: false,
+        noteFolderIDIndicator: false
     }
 
-    updateErrorCount = () => {
-        let errors = this.state.errors;
-        let count = 0;
+    // updateErrorCount = () => {
+    //     let errors = this.state.errors;
+    //     let count = 0;
 
-        Object.values(errors).forEach(val => {
-            if (val.length > 0) {
-                count++;
-            }
-        });
-        this.setState({ errorCount: count });
-        let valid = count === 0 ? true : false;
-        this.setState({ formValid: valid });
-    };
+    //     Object.values(errors).forEach(val => {
+    //         if (val.length > 0) {
+    //             count++;
+    //         }
+    //     });
+    //     this.setState({ errorCount: count });
+    //     let valid = count === 0 ? true : false;
+    //     this.setState({ formValid: valid });
+    // };
 
     updateFolderId(folderId) {
         this.setState({ folderId: { value: folderId, touched: true } });
     }
 
-    validateEntry = (name, value) => {
-        let err = '';
-        if (name === 'name') {
-            if (value.length === 0) {
-                return 'Name is required.'
+    // validateEntry = (name, value) => {
+    //     let err = '';
+    //     if (name === 'name') {
+    //         if (value.length === 0) {
+    //             return 'Name is required.'
+    //         }
+    //         else if (name.length < 3) {
+    //             return "Name must be at least 3 characters long";
+    //         }
+    //     }
+    //     const { errors } = { ...this.state };
+    //     errors[name] = err;
+    //     this.setState({ errors });
+    // }
+
+    validateNoteName = (value) =>{
+        if (value.trim().length === 0) {
+            let newText = 'Note name is required.';
+            const newItems = {
+                ...this.state.errors,
+                name: newText
             }
-            else if (name.length < 3) {
-                return "Name must be at least 3 characters long";
+            this.setState({
+                errors : newItems
+            });
+        } else if (value.length < 3) {
+            let newText = "Note name must be at least 3 characters long";
+            const newItems = {
+                ...this.state.errors,
+                name: newText
             }
+            this.setState({
+                errors : newItems
+            });          
+        } else if(value.length > 3){
+            let newText = "You are fine..";
+            const newItems = {
+                ...this.state.errors,
+                name: newText
+            }
+            this.setState({
+                errors : newItems,
+                noteNameIndicator: true
+            });
         }
-        const { errors } = { ...this.state };
-        errors[name] = err;
-        this.setState({ errors });
     }
 
-    handleChange = e => {
-        const { name, value } = e.target;
-        this.setState(
-            { [name]: value.trim() },
-        );
-        this.validateEntry(name, value.trim());
-        this.updateErrorCount();
+
+    
+    validateNoteContent = (value) =>{
+        if (value.trim().length === 0) {
+            let newText = 'Note content is required.';
+            const newItems = {
+                ...this.state.errors,
+                noteContentMessage: newText
+            }
+            this.setState({
+                errors : newItems
+            });
+        } else if (value.length < 10) {
+            let newText = "Note content must be 10 characters long";
+            const newItems = {
+                ...this.state.errors,
+                content: newText
+            }
+            this.setState({
+                errors : newItems
+            });          
+        } else if(value.length > 3){
+            let newText = "You are fine..";
+            const newItems = {
+                ...this.state.errors,
+                content: newText
+            }
+            this.setState({
+                errors : newItems,
+                noteContentIndicator: true
+            });
+        }
     }
 
+
+    validateFolderType = (value) =>{
+        if (value === "") {
+            let newText = 'You must choose valid folder type';
+            const newItems = {
+                ...this.state.errors,
+                folderId: newText
+            }
+            this.setState({
+                errors : newItems
+            }); 
+        }else{
+            let newText = 'You are fine..';
+            const newItems = {
+                ...this.state.errors,
+                folderId: newText
+            }
+            this.setState({
+                errors : newItems,
+                noteFolderIDIndicator: true
+            }); 
+        } 
+    }
+
+
+
+    // handleChange = e => {
+    //     const { name, value } = e.target;
+    //     this.setState(
+    //         { [name]: value.trim() },
+    //     );
+    //     this.validateEntry(name, value.trim());
+    //     this.updateErrorCount();
+    // }
+
+    handleNoteNameChange = (event) =>{
+        this.setState({name: event.target.value});
+        this.validateNoteName(event.target.value);
+    }
+
+    handleNoteContentChange = (event) =>{
+        this.setState({content: event.target.value});
+        this.validateNoteContent(event.target.value);
+    }
+
+    handleFolderIDChange = (event) =>{
+        this.setState({folderId: event.target.value});
+        this.validateFolderType(event.target.value);
+    }
+
+
+    
     handleSubmit = (e) => {
         e.preventDefault();
 
@@ -78,6 +190,7 @@ export default class AddNote extends Component {
         this.setState({ appError: null });
 
         fetch(config.API_NOTES, {
+
             method: 'POST',
             body: JSON.stringify(note),
             headers: {
@@ -107,7 +220,10 @@ export default class AddNote extends Component {
 
     render() {
         const { errors } = this.state;
-        const folders = this.context.folders;
+        // const folders = this.context.folders;
+        const { folders = [] } = this.context;
+        const {noteNameIndicator, noteContentIndicator, noteFolderIDIndicator} = this.state;
+        const isEnabled = noteNameIndicator && noteContentIndicator && noteFolderIDIndicator;
         if (this.state.appError) {
             return <p className="error">{this.state.appError}</p>;
         }
@@ -122,9 +238,9 @@ export default class AddNote extends Component {
                     type="text"
                     className="add-note__name"
                     name="name"
-                    id="name"
-                    defaultValue=""
-                    onChange={this.handleChange}
+                    id="name"  
+                    value={this.state.name}
+                    onChange={this.handleNoteNameChange}
                 />
 
                 {errors.name.length > 0 && (
@@ -134,33 +250,33 @@ export default class AddNote extends Component {
                     type="text"
                     className="add-note__content"
                     name="content"
-                    id="content"
-                    defaultValue=""
-                    onChange={this.handleChange}
+                    id="content"        
+                    value={this.state.content}
+                    onChange={this.handleNoteContentChange}
                 />
+                {errors.content.length > 0 && (
+                    <ValidationError message={errors.content} />)}
                 <select
                     id="folderId"
                     name="folderId"
                     value={this.state.folderId}
-                    onChange={this.handleChange}
+                    onChange={this.handleFolderIDChange}
                 >
                     <option value="">Select a folder</option>
                     {folders.map(folder => (<option key={folder.id} value={folder.id}>{folder.folder_name}</option>))}
                 </select>
+                {errors.folderId.length > 0 && (
+                    <ValidationError message={errors.folderId} />)}
                 <button
                     type="submit"
                     id="submit-btn"
-                    disabled={
-                        this.state.formValid === false
-                    }
-                >Submit
-                    </button>
+                    disabled={!isEnabled}>Submit</button>
 
-                {this.state.errorCount !== null ? (
+                {/* {this.state.errorCount !== null ? (
                     <p className="form-status">
                         Form is {this.state.formValid ? 'complete' : 'incomplete'}
                     </p>
-                ) : null}
+                ) : null} */}
 
             </form>
         );

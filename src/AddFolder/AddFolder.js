@@ -13,44 +13,69 @@ export default class AddFolder extends React.Component {
         errorCount: null,
         name: '',
         errors: {
-			name: 'You must enter a note title'
-        }
+			name: 'You must enter a folder name'
+        },
     }
 
-    updateErrorCount = () => {
-		let errors = this.state.errors;
-		let count = 0;
+    // updateErrorCount = () => {
+	// 	let errors = this.state.errors;
+	// 	let count = 0;
         
-		Object.values(errors).forEach(val => {
-			if (val.length > 0) {
-				count++;
-			}
-		});
-		this.setState({ errorCount: count });
-        let valid = count === 0 ? true : false;
-		this.setState({ formValid: valid });
-    };
+	// 	Object.values(errors).forEach(val => {
+	// 		if (val.length > 0) {
+	// 			count++;
+	// 		}
+	// 	});
+	// 	this.setState({ errorCount: count });
+    //     let valid = count === 0 ? true : false;
+	// 	this.setState({ formValid: valid });
+    // };
     
-    validateEntry = (name, value) => {
-        let err = '';
+    validateEntry = (value) => {
+        // let err = '';
 
-        if (name === 'name') {
-            if (value.trim().length === 0) {
-                return 'Folder name is required.'
-            } else if (name.length < 3) {
-                return "Name must be at least 3 characters long";
-            }
+        // if (name === 'name') {
+        //     if (value.trim().length === 0) {
+        //         return 'Folder name is required.'
+        //     } else if (name.length < 3) {
+        //         return "Name must be at least 3 characters long";
+        //     }
+        // }
+        // const { errors } = { ...this.state };
+        // errors[name] = err;
+        // this.setState({ errors });
+
+
+        if (value.trim().length === 0) {
+            let newText = 'Folder name is required.';
+            this.setState({
+                errors:{
+                    name: newText
+                }
+            });
+        } else if (value.length < 3) {
+            let newText = "Name must be at least 3 characters long";
+            this.setState({
+                errors:{
+                    name: newText
+                }
+            });           
+        } else if(value.length > 3){
+            let newText = "You are fine";
+            this.setState({
+                errors:{
+                    name: newText
+                },
+                formValid : true
+            });
         }
-        const { errors } = { ...this.state };
-        errors[name] = err;
-        this.setState({ errors });
     }
 
     handleChange = e => {
         const { name, value } = e.target;
         this.setState({ [name]: value.trim() });
-        this.validateEntry(name, value);
-        this.updateErrorCount();
+        this.validateEntry(e.target.value);
+        // this.updateErrorCount();
     }
 
     handleSubmit = (e) => {
@@ -89,6 +114,7 @@ export default class AddFolder extends React.Component {
 
     render() {
         const { errors } = this.state;
+        const isEnabled = this.state.formValid;
 
         return (
             <form className="addFolderForm" onSubmit={e => this.handleSubmit(e)}>
@@ -105,15 +131,15 @@ export default class AddFolder extends React.Component {
                     <button
                         type="submit"
                         id="submit-btn"
-                        disabled={this.state.formValid === false}
+                        disabled={!isEnabled}
                     >
                         Submit
                     </button>
-                {this.state.errorCount !== null ? (
+                {/* {this.state.errorCount !== null ? (
 					<p className="form-status">
 						Form is {this.state.formValid ? 'complete' : 'incomplete'}
 					</p>
-				) : null}
+				) : null} */}
             </form>
         );
     }
