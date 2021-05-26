@@ -9,7 +9,6 @@ export default class AddNote extends Component {
     state = {
         appError: null,
         formValid: false,
-        errorCount: null,
         name: '',
         folderId: '',
         content: '',
@@ -138,25 +137,21 @@ export default class AddNote extends Component {
     
     handleSubmit = (e) => {
         e.preventDefault();
-
-        if (this.state.errorCount > 0) return;
-
         const { name, folderId, content } = e.target;
-        const note = {
-            note_name: name.value,
-            folder_id: folderId.value,
-            content: content.value,
+        const newNote = {
+            note_name: e.target['name'].value,  
+            content: e.target['content'].value,
+            folder_id: e.target['folderId'].value,
             modified: new Date()
         };
         this.setState({ appError: null });
 
         fetch(config.API_NOTES, {
-
-            method: 'POST',
-            body: JSON.stringify(note),
+            method: 'POST',        
             headers: {
                 'content-type': 'application/json'
-            }
+            },
+            body: JSON.stringify(newNote)
         })
             .then(res => {
                 if (!res.ok) {
@@ -167,12 +162,15 @@ export default class AddNote extends Component {
                 return res.json();
             })
             .then(data => {
-                name.value = '';
-                content.value = '';
-                folderId.value = '';
-                this.context.addNote(data);
+                // name.value = '';
+                // content.value = '';
+                // folderId.value = '';
+                // this.context.addNote(data);
                 this.setState({ data });
-                this.props.history.push('/', data);
+                // this.props.history.push('/', data);
+
+                this.context.addNote(data);
+                this.props.history.push(`/folder/${data.folderId}`);
             })
             .catch(error => {
                 this.setState({ appError: error });
