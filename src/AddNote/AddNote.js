@@ -9,6 +9,7 @@ export default class AddNote extends Component {
     state = {
         appError: null,
         formValid: false,
+        errorCount: null,
         name: '',
         folderId: '',
         content: '',
@@ -137,21 +138,25 @@ export default class AddNote extends Component {
     
     handleSubmit = (e) => {
         e.preventDefault();
+
+        if (this.state.errorCount > 0) return;
+
         const { name, folderId, content } = e.target;
-        const newNote = {
-            note_name: e.target['name'].value,  
-            content: e.target['content'].value,
-            folder_id: e.target['folderId'].value,
+        const note = {
+            note_name: name.value,
+            folder_id: folderId.value,
+            content: content.value,
             modified: new Date()
         };
         this.setState({ appError: null });
 
         fetch(config.API_NOTES, {
-            method: 'POST',        
+
+            method: 'POST',
+            body: JSON.stringify(note),
             headers: {
                 'content-type': 'application/json'
-            },
-            body: JSON.stringify(newNote)
+            }
         })
             .then(res => {
                 if (!res.ok) {
@@ -162,15 +167,12 @@ export default class AddNote extends Component {
                 return res.json();
             })
             .then(data => {
-                // name.value = '';
-                // content.value = '';
-                // folderId.value = '';
-                // this.context.addNote(data);
-                this.setState({ data });
-                // this.props.history.push('/', data);
-
+                name.value = '';
+                content.value = '';
+                folderId.value = '';
                 this.context.addNote(data);
-                this.props.history.push(`/folder/${data.folderId}`);
+                this.setState({ data });
+                this.props.history.push('/', data);
             })
             .catch(error => {
                 this.setState({ appError: error });
