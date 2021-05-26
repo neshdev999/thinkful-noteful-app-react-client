@@ -16,35 +16,8 @@ export default class AddFolder extends React.Component {
 			name: 'You must enter a folder name'
         },
     }
-
-    // updateErrorCount = () => {
-	// 	let errors = this.state.errors;
-	// 	let count = 0;
-        
-	// 	Object.values(errors).forEach(val => {
-	// 		if (val.length > 0) {
-	// 			count++;
-	// 		}
-	// 	});
-	// 	this.setState({ errorCount: count });
-    //     let valid = count === 0 ? true : false;
-	// 	this.setState({ formValid: valid });
-    // };
     
     validateEntry = (value) => {
-        // let err = '';
-
-        // if (name === 'name') {
-        //     if (value.trim().length === 0) {
-        //         return 'Folder name is required.'
-        //     } else if (name.length < 3) {
-        //         return "Name must be at least 3 characters long";
-        //     }
-        // }
-        // const { errors } = { ...this.state };
-        // errors[name] = err;
-        // this.setState({ errors });
-
 
         if (value.trim().length === 0) {
             let newText = 'Folder name is required.';
@@ -75,7 +48,6 @@ export default class AddFolder extends React.Component {
         const { name, value } = e.target;
         this.setState({ [name]: value.trim() });
         this.validateEntry(e.target.value);
-        // this.updateErrorCount();
     }
 
     handleSubmit = (e) => {
@@ -135,11 +107,6 @@ export default class AddFolder extends React.Component {
                     >
                         Submit
                     </button>
-                {/* {this.state.errorCount !== null ? (
-					<p className="form-status">
-						Form is {this.state.formValid ? 'complete' : 'incomplete'}
-					</p>
-				) : null} */}
             </form>
         );
     }

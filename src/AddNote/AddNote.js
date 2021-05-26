@@ -24,38 +24,9 @@ export default class AddNote extends Component {
         noteFolderIDIndicator: false
     }
 
-    // updateErrorCount = () => {
-    //     let errors = this.state.errors;
-    //     let count = 0;
-
-    //     Object.values(errors).forEach(val => {
-    //         if (val.length > 0) {
-    //             count++;
-    //         }
-    //     });
-    //     this.setState({ errorCount: count });
-    //     let valid = count === 0 ? true : false;
-    //     this.setState({ formValid: valid });
-    // };
-
     updateFolderId(folderId) {
         this.setState({ folderId: { value: folderId, touched: true } });
     }
-
-    // validateEntry = (name, value) => {
-    //     let err = '';
-    //     if (name === 'name') {
-    //         if (value.length === 0) {
-    //             return 'Name is required.'
-    //         }
-    //         else if (name.length < 3) {
-    //             return "Name must be at least 3 characters long";
-    //         }
-    //     }
-    //     const { errors } = { ...this.state };
-    //     errors[name] = err;
-    //     this.setState({ errors });
-    // }
 
     validateNoteName = (value) =>{
         if (value.trim().length === 0) {
@@ -148,16 +119,6 @@ export default class AddNote extends Component {
     }
 
 
-
-    // handleChange = e => {
-    //     const { name, value } = e.target;
-    //     this.setState(
-    //         { [name]: value.trim() },
-    //     );
-    //     this.validateEntry(name, value.trim());
-    //     this.updateErrorCount();
-    // }
-
     handleNoteNameChange = (event) =>{
         this.setState({name: event.target.value});
         this.validateNoteName(event.target.value);
@@ -220,7 +181,6 @@ export default class AddNote extends Component {
 
     render() {
         const { errors } = this.state;
-        // const folders = this.context.folders;
         const { folders = [] } = this.context;
         const {noteNameIndicator, noteContentIndicator, noteFolderIDIndicator} = this.state;
         const isEnabled = noteNameIndicator && noteContentIndicator && noteFolderIDIndicator;
@@ -271,13 +231,6 @@ export default class AddNote extends Component {
                     type="submit"
                     id="submit-btn"
                     disabled={!isEnabled}>Submit</button>
-
-                {/* {this.state.errorCount !== null ? (
-                    <p className="form-status">
-                        Form is {this.state.formValid ? 'complete' : 'incomplete'}
-                    </p>
-                ) : null} */}
-
             </form>
         );
     }
